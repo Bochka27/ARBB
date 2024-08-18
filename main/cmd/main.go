@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -25,12 +26,12 @@ type TickerInfo struct {
 	NextFundingTime string `json:"nextFundingTime"`
 }
 
-func (c MarketTickersResponse) TextOutput() string {
+/*func (c MarketTickersResponse) TextOutput() string {
 	p := fmt.Sprintf(
 		"retCode: %s\nretMsg: %s\nresult: %s\nretExtInfo: %s\ntime: %s\n",
 		c.RetCode, c.RetMsg, c.Result, c.RetExtInfo, c.Time)
 	return p
-}
+}*/
 
 func main() {
 	//a := app.NewApp()
@@ -57,12 +58,21 @@ func main() {
 	}
 	defer res.Body.Close()
 
-	var cResp MarketTickersResponse
+	/*var cResp MarketTickersResponse
 
 	if err := json.NewDecoder(res.Body).Decode(&cResp); err != nil {
 		fmt.Println("Decode error", err)
 	} else {
 		fmt.Println(cResp.TextOutput())
+	}*/
+	body, err := io.ReadAll(res.Body)
+	var cResp MarketTickersResponse
+	if err := json.Unmarshal(body, &cResp); err != nil {
+		fmt.Println("Can not unmarshal JSON")
+	}
+	for _, c := range cResp.Result.List {
+
+		fmt.Println(c.Symbol, c.LastPrice, c.FundingRate, c.NextFundingTime)
 	}
 
 }
