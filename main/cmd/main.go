@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sort"
+	"strconv"
+	"time"
 )
 
 type MarketTickersResponse struct {
@@ -27,8 +30,8 @@ type TickerInfo struct {
 }
 
 /*func (c MarketTickersResponse) TextOutput() string {
-	p := fmt.Sprintf(
-		"retCode: %s\nretMsg: %s\nresult: %s\nretExtInfo: %s\ntime: %s\n",
+	p := fmt.Sprintf
+		"retCode: %d\nretMsg: %s\nresult: %s\nretExtInfo: %s\ntime: %d\n",
 		c.RetCode, c.RetMsg, c.Result, c.RetExtInfo, c.Time)
 	return p
 }*/
@@ -63,6 +66,7 @@ func main() {
 	if err := json.NewDecoder(res.Body).Decode(&cResp); err != nil {
 		fmt.Println("Decode error", err)
 	} else {
+		fmt.Println(cResp.RetCode)
 		fmt.Println(cResp.TextOutput())
 	}*/
 	body, err := io.ReadAll(res.Body)
@@ -70,9 +74,17 @@ func main() {
 	if err := json.Unmarshal(body, &cResp); err != nil {
 		fmt.Println("Can not unmarshal JSON")
 	}
-	for _, c := range cResp.Result.List {
 
-		fmt.Println(c.Symbol, c.LastPrice, c.FundingRate, c.NextFundingTime)
+	sort.SliceStable(cResp.Result.List, func(i, j int) bool {
+		return cResp.Result.List[i].FundingRate > cResp.Result.List[j].FundingRate
+	})
+	for _, c := range cResp.Result.List {
+		parseInt, err := strconv.ParseInt(c.NextFundingTime, 10, 64)
+		if err != nil {
+			return
+		}
+
+		fmt.Println(c.Symbol, c.LastPrice, c.FundingRate, time.UnixMilli(parseInt).Format("2006-01-02 15:04:05"))
 	}
 
 }
