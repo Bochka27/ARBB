@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/Bochka27/ARBB/internal/connector"
-)
+import "github.com/Bochka27/ARBB/internal/connector"
 
 func main() {
 	//a := app.NewApp()
@@ -13,5 +11,7 @@ func main() {
 	//connector.NewBybitS()
 	//connector.NewBybitF()
 	//connector.KuCoinF()
-	connector.KuCoinS()
+	//connector.KuCoinS()
+	connector.BitGetF()
+	connector.BitGetS()
 }
