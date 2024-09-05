@@ -12,6 +12,7 @@ func main() {
 	//connector.NewBybitF()
 	//connector.KuCoinF()
 	//connector.KuCoinS()
-	connector.BitGetF()
-	connector.BitGetS()
+	//connector.BitGetF()
+	//connector.BitGetS()
+	connector.NewMexcS()
 }
