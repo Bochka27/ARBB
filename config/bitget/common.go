@@ -26,7 +26,7 @@ func (b *BitgetRestClient) Init() *BitgetRestClient {
 	b.HttpClient = http.Client{
 		Timeout: time.Duration(TimeoutSecond) * time.Second,
 	}
-	return p
+	return b
 }
 
 func (b *BitgetRestClient) DoPost(uri string, params string) (string, error) {

@@ -1,4 +1,4 @@
-package mexc
+package models
 
 type FundingRate struct {
 	Success bool `json:"success"`

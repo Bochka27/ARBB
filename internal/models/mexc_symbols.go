@@ -1,9 +1,9 @@
-package mexc
+package models
 
 type DetailInformation struct {
-	Success bool         `json:"success"`
-	Code    int64        `json:"code"`
-	Data    []DataEntity `json:"data"`
+	Success bool          `json:"success"`
+	Code    int64         `json:"code"`
+	Data    []*DataEntity `json:"data"`
 }
 
 type DataEntity struct {

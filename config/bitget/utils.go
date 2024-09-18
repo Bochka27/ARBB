@@ -15,11 +15,6 @@ func TimesStamp() string {
 	return strconv.FormatInt(timesStamp, 10)
 }
 
-func TimesStampSec() string {
-	timesStamp := time.Now().Unix()
-	return strconv.FormatInt(timesStamp, 10)
-}
-
 func Headers(request *http.Request, apikey string, timestamp string, sign string, passphrase string) {
 	request.Header.Add(ContentType, ApplicationJson)
 	request.Header.Add(BgAccessKey, apikey)

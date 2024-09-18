@@ -3,7 +3,7 @@ package connector
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Bochka27/ARBB/internal/models/mexc"
+	"github.com/Bochka27/ARBB/internal/models"
 	"io"
 	"net/http"
 	"time"
@@ -34,14 +34,14 @@ func NewMexcF(symbol string) {
 	}(res.Body)
 
 	body, err := io.ReadAll(res.Body)
-	var cResp *mexc.FundingRate
+	var cResp *models.FundingRate
 	if err := json.Unmarshal(body, &cResp); err != nil {
-		fmt.Println("Can not unmarshal JSON")
+		fmt.Println(err)
 	}
 
 	data := cResp.Data
 
-	fmt.Println(symbol, data.FundingRate, "CurrentTime = "+time.UnixMilli(data.Timestamp).Format("2006-01-02 15:04:05"), "NextSettleTime = "+time.UnixMilli(data.NextSettleTime).Format("2006-01-02 15:04:05"))
+	fmt.Println(symbol, data.FundingRate*100, "CurrentTime = "+time.UnixMilli(data.Timestamp).Format("2006-01-02 15:04:05"), "NextSettleTime = "+time.UnixMilli(data.NextSettleTime).Format("2006-01-02 15:04:05"))
 }
 
 func NewMexcS() {
@@ -69,9 +69,9 @@ func NewMexcS() {
 	}(res.Body)
 
 	body, err := io.ReadAll(res.Body)
-	var cResp *mexc.DetailInformation
+	var cResp *models.DetailInformation
 	if err := json.Unmarshal(body, &cResp); err != nil {
-		fmt.Println("Can not unmarshal JSON")
+		fmt.Println(err)
 	}
 
 	needSlice := cResp.Data

@@ -3,45 +3,27 @@ package connector
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Bochka27/ARBB/internal/models/bybit"
-	"io"
-	"net/http"
+	"github.com/Bochka27/ARBB/internal/models"
 	"sort"
 	"strconv"
 	"time"
 )
 
-func NewBybitF() {
-	url := "https://api.bybit.com/v5/market/tickers?category=linear"
-	method := "GET"
+func BybitF() {
+	url := urlBF
+	response := DoGet(url)
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-
-	if err != nil {
+	var dt *models.MarketTickersResponseF
+	if err := json.Unmarshal(response, &dt); err != nil {
 		fmt.Println(err)
-		return
-	}
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	var cResp *bybit.MarketTickersResponseF
-	if err := json.Unmarshal(body, &cResp); err != nil {
-		fmt.Println("Can not unmarshal JSON")
-
-		sort.SliceStable(cResp.Result.List, func(i, j int) bool {
-			return cResp.Result.List[i].FundingRate > cResp.Result.List[j].FundingRate
+		sort.SliceStable(dt.Result.List, func(i, j int) bool {
+			return dt.Result.List[i].FundingRate > dt.Result.List[j].FundingRate
 		})
 
-		needSlice := cResp.Result.List
-		fmt.Println(len(needSlice))
-		for _, c := range needSlice {
+		dtf := dt.Result.List
+		fmt.Println(len(dtf))
+		for _, c := range dtf {
 			parseInt, err := strconv.ParseInt(c.NextFundingTime, 10, 64)
 			if err != nil {
 				return
@@ -55,34 +37,18 @@ func NewBybitF() {
 	}
 }
 
-func NewBybitS() {
-	url := "https://api.bybit.com/v5/market/tickers?category=spot"
-	method := "GET"
+func BybitS() {
+	url := urlBS
+	response := DoGet(url)
 
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-
-	if err != nil {
+	var dt *models.MarketTickersResponseS
+	if err := json.Unmarshal(response, &dt); err != nil {
 		fmt.Println(err)
-		return
 	}
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	var cResp *bybit.MarketTickersResponseS
-	if err := json.Unmarshal(body, &cResp); err != nil {
-		fmt.Println("Can not unmarshal JSON")
-	}
-
-	needSlice := cResp.Result.List
-	fmt.Println(len(needSlice))
-	for _, c := range needSlice {
-		fmt.Println(c.Symbol, c.LastPrice)
+	dts := dt.Result.List
+	fmt.Println(len(dts))
+	for _, c := range dts {
+		fmt.Println(c.Symbol, c.Ask1Price, c.Bid1Price)
 	}
 }

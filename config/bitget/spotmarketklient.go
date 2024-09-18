@@ -5,8 +5,8 @@ type SpotMarketClient struct {
 }
 
 func (s *SpotMarketClient) Init() *SpotMarketClient {
-	p.BitgetRestClient = new(BitgetRestClient).Init()
-	return p
+	s.BitgetRestClient = new(BitgetRestClient).Init()
+	return s
 }
 
 func (s *SpotMarketClient) Currencies() (string, error) {

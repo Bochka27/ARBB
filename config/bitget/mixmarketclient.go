@@ -6,7 +6,7 @@ type MixMarketClient struct {
 
 func (m *MixMarketClient) Init() *MixMarketClient {
 	m.BitgetRestClient = new(BitgetRestClient).Init()
-	return p
+	return m
 }
 
 func (m *MixMarketClient) Contracts(params map[string]string) (string, error) {
@@ -20,7 +20,7 @@ func (m *MixMarketClient) Depth(params map[string]string) (string, error) {
 }
 
 func (m *MixMarketClient) Ticker(params map[string]string) (string, error) {
-	resp, err := p.BitgetRestClient.DoGet("/api/mix/v1/market/ticker", params)
+	resp, err := m.BitgetRestClient.DoGet("/api/mix/v1/market/ticker", params)
 	return resp, err
 }
 
